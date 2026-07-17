@@ -10,6 +10,8 @@
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    {{-- Varian "pro": html2canvas biasa gagal membaca warna oklch bawaan Tailwind v4. --}}
+    <script defer src="https://cdn.jsdelivr.net/npm/html2canvas-pro@1.5.11/dist/html2canvas-pro.min.js"></script>
     <style>
         @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
         .reveal { animation: fadeUp .5s ease both; }
@@ -223,30 +225,125 @@
         </div>
     </section>
 
-    {{-- Persentase keislaman (dari 9 soal ibadah, no. 10–18) --}}
-    @php $warnaIslam = \App\Support\KategoriWarna::hex($keislaman['warna']); @endphp
-    <section class="reveal rounded-3xl bg-surface shadow-sm ring-1 ring-line p-6 sm:p-8">
-        <div class="flex flex-wrap items-start justify-between gap-4">
-            <div>
-                <h2 class="text-lg font-bold text-ink">Persentase Keislaman</h2>
-                <p class="mt-1 text-sm text-ink-soft">
-                    Dihitung dari {{ $keislaman['total'] }} soal ibadah: membaca Al-Qur'an, muroja'ah, wudhu,
-                    sholat wajib, adab Islami, mengajak beribadah, Ramadhan, dan tayamum.
-                </p>
+    {{-- Persentase keislaman: donat komposisi 4 poin, panjang cincin = capaian --}}
+    @php
+        $warnaIslam = \App\Support\KategoriWarna::hex($keislaman['warna']);
+        // Slot warna kategorikal urutan tetap — sudah lolos cek keterbacaan buta warna.
+        $hexKomponen = ['#2a78d6', '#008300', '#e87ba4'];
+        $poinTercapai = array_sum(array_column($keislaman['komponen'], 'skor'));
+        $sisaPoin = round(max(0, $keislaman['maks_poin'] - $poinTercapai), 2);
+        // Ikon tiap poin: kompas (prinsip), masjid (kewajiban), dua orang (perilaku).
+        $ikonKomponen = [
+            'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z M14.8 9.2l-1.9 4.7-4.7 1.9 1.9-4.7 4.7-1.9Z',
+            'M3.5 20.5h17 M5.5 20.5v-6.2a6.5 6.5 0 0 1 13 0v6.2 M12 3.2c1.4 1.5 2.1 2.5 2.1 3.4a2.1 2.1 0 1 1-4.2 0c0-.9.7-1.9 2.1-3.4Z M10 20.5v-3a2 2 0 1 1 4 0v3',
+            'M15.5 8.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z M4.5 19.5a7.5 7.5 0 0 1 15 0 M18.5 10.5a2.5 2.5 0 1 0 0-5',
+        ];
+    @endphp
+    <section class="reveal overflow-hidden rounded-3xl bg-surface shadow-sm ring-1 ring-line">
+        {{-- Papan infografis: kualitas iman + 3 poin penyusun --}}
+        <div class="relative overflow-hidden px-6 py-8 sm:px-8"
+             style="background:
+                radial-gradient(60% 80% at 12% 20%, #fdeef1 0%, rgba(253,238,241,0) 70%),
+                radial-gradient(55% 75% at 88% 15%, #e7f5fd 0%, rgba(231,245,253,0) 70%),
+                radial-gradient(70% 90% at 50% 110%, #eef0fb 0%, rgba(238,240,251,0) 70%),
+                #ffffff;">
+            <h2 class="text-center text-lg font-bold text-ink">Persentase Keislaman</h2>
+            <p class="mt-1 text-center text-xs font-semibold uppercase tracking-widest text-ink-soft">Karakter Iman {{ $anak }}</p>
+
+            {{-- Hati + kualitas iman. Teks dibatasi lebarnya agar label terpanjang
+                 ("Perlu Bimbingan") tetap berada di dalam lengkung hati. --}}
+            <div class="relative mx-auto mt-4 flex h-52 w-72 items-center justify-center">
+                <svg viewBox="0 0 288 208" class="absolute inset-0 h-full w-full" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="gradHati" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#f0abcb"/>
+                            <stop offset="100%" stop-color="#8b7fd4"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M144 196C144 196 20 126 20 68C20 40 42 20 70 20C94 20 124 36 144 62C164 36 194 20 218 20C246 20 268 40 268 68C268 126 144 196 144 196Z"
+                          fill="none" stroke="url(#gradHati)" stroke-width="6" stroke-linejoin="round"/>
+                    <path d="M144 172C144 172 38 116 38 68C38 46 56 32 78 32C98 32 126 48 144 72C162 48 190 32 210 32C232 32 250 46 250 68C250 116 144 172 144 172Z"
+                          fill="none" stroke="url(#gradHati)" stroke-width="3" stroke-linejoin="round" opacity="0.55"/>
+                </svg>
+                {{-- Label pakai warna teks gelap, bukan warna kategori: sebagian warna
+                     kategori (kuning/abu) terlalu tipis kontrasnya di atas latar terang. --}}
+                <div class="relative -mt-4 w-40 text-center">
+                    <p class="text-xs font-semibold text-ink-soft">Kualitas Iman</p>
+                    <p class="mt-0.5 text-xl font-extrabold uppercase leading-tight text-ink">{{ $keislaman['label'] }}</p>
+                    <span class="mt-1.5 inline-block h-1.5 w-8 rounded-full" style="background:{{ $warnaIslam }}"></span>
+                </div>
             </div>
-            <div class="shrink-0 text-right">
-                <p class="text-4xl font-extrabold leading-none" style="color:{{ $warnaIslam }}">{{ $keislaman['persen'] }}%</p>
-                <span class="mt-2 inline-block rounded-full px-3 py-1 text-xs font-semibold text-white"
-                      style="background:{{ $warnaIslam }}">{{ $keislaman['label'] }}</span>
+
+            {{-- Tiga poin penyusun --}}
+            <ul class="mx-auto mt-2 flex max-w-lg flex-wrap items-start justify-center gap-x-6 gap-y-5">
+                @foreach ($keislaman['komponen'] as $i => $k)
+                    <li class="flex w-24 flex-col items-center text-center sm:w-28">
+                        <span class="flex h-14 w-14 items-center justify-center rounded-full bg-surface shadow-sm ring-2"
+                              style="--tw-ring-color:{{ $hexKomponen[$i] }}">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.7"
+                                 stroke="{{ $hexKomponen[$i] }}" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="{{ $ikonKomponen[$i] }}"/>
+                            </svg>
+                        </span>
+                        <p class="mt-2 text-sm font-bold leading-tight text-ink">{{ $k['label'] }}</p>
+                        <p class="text-xs text-ink-soft">({{ $k['aspek'] }})</p>
+                        <p class="mt-1 text-sm font-bold tabular-nums" style="color:{{ $hexKomponen[$i] }}">{{ number_format($k['skor'], 1) }}<span class="text-ink-soft">/10</span></p>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+
+        {{-- Rincian angka --}}
+        <div class="border-t border-line p-6 sm:p-8">
+        <h3 class="text-sm font-bold text-ink">Rincian nilai</h3>
+        <p class="mt-1 text-sm text-ink-soft">
+            Seberapa penuh cincin menunjukkan capaian {{ $anak }}, dan tiap warna menunjukkan
+            sumbangan masing-masing poin.
+        </p>
+
+        <div class="mt-5 grid items-center gap-6 sm:grid-cols-[minmax(0,15rem)_1fr]">
+            {{-- Donat --}}
+            <div class="relative mx-auto h-56 w-56">
+                <canvas id="donatKeislaman" aria-label="Diagram donat persentase keislaman"></canvas>
+                <div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
+                    <p class="text-3xl font-extrabold leading-none" style="color:{{ $warnaIslam }}">{{ $keislaman['persen'] }}%</p>
+                    <p class="mt-1 text-xs font-semibold text-ink-soft">{{ $keislaman['label'] }}</p>
+                </div>
+            </div>
+
+            {{-- Legenda + nilai tiap poin --}}
+            <div>
+                <ul class="space-y-2.5">
+                    @foreach ($keislaman['komponen'] as $i => $k)
+                        <li class="flex items-center justify-between gap-3 text-sm">
+                            <span class="flex min-w-0 items-center gap-2.5">
+                                <span class="h-2.5 w-2.5 shrink-0 rounded-full" style="background:{{ $hexKomponen[$i] }}"></span>
+                                <span class="truncate font-medium text-ink">{{ $k['label'] }}</span>
+                                <span class="shrink-0 text-xs text-ink-soft">({{ $k['sumber'] }})</span>
+                            </span>
+                            <span class="shrink-0 font-semibold tabular-nums text-ink">{{ number_format($k['skor'], 1) }}<span class="font-normal text-ink-soft">/10</span></span>
+                        </li>
+                    @endforeach
+                </ul>
+                <div class="mt-3 flex items-center justify-between gap-3 border-t border-line pt-3 text-sm">
+                    <span class="font-semibold text-ink">Rata-rata keislaman</span>
+                    <span class="font-bold tabular-nums" style="color:{{ $warnaIslam }}">{{ number_format($keislaman['skor'], 2) }}<span class="font-normal text-ink-soft">/10</span></span>
+                </div>
             </div>
         </div>
 
-        <div class="mt-5 h-3 overflow-hidden rounded-full bg-line">
-            <div class="h-full rounded-full transition-all" style="width:{{ $keislaman['persen'] }}%; background:{{ $warnaIslam }}"></div>
+        {{-- Catatan kesimpulan --}}
+        <div class="mt-6 rounded-2xl bg-brand-soft p-4">
+            <p class="text-sm font-semibold text-ink">Catatan</p>
+            <p class="mt-1 text-sm leading-relaxed text-ink-soft">
+                Poin keislaman diambil dari <strong class="text-ink">aqidah</strong> (prinsip),
+                <strong class="text-ink">ibadah</strong> (kewajiban), serta
+                <strong class="text-ink">adab dan akhlaq</strong> (perilaku). Rata-rata ketiganya adalah
+                {{ number_format($keislaman['skor'], 2) }} dari 10, sehingga keislaman {{ $anak }}
+                masuk kategori <strong style="color:{{ $warnaIslam }}">{{ $keislaman['label'] }}</strong>.
+            </p>
         </div>
-        <p class="mt-2 text-xs text-ink-soft">
-            Skor rata-rata {{ number_format($keislaman['skor'], 2) }} dari 10.
-        </p>
+        </div>
     </section>
 
     <p class="reveal px-1 text-center text-sm text-ink-soft">
@@ -316,11 +413,136 @@
         </div>
     </section>
 
-    {{-- Penutup: ajakan unduh + disclaimer --}}
-    <section class="reveal rounded-3xl bg-surface p-6 text-center shadow-sm ring-1 ring-line sm:p-8">
+    {{-- Infografis ringkas seluruh hasil — dirancang agar bisa diunduh jadi gambar --}}
+    @php
+        $gayaTop = $gaya_lengkap[0] ?? null;
+        $hexGaya = ['#2a78d6', '#008300', '#e87ba4'];
+        $hexHati = ['#4a3aa7', '#e87ba4', '#eda100'];
+    @endphp
+    <section class="reveal space-y-3">
+        <div id="infografis" class="overflow-hidden rounded-3xl ring-1 ring-line"
+             style="background:
+                radial-gradient(45% 55% at 8% 12%, #fdeef1 0%, rgba(253,238,241,0) 70%),
+                radial-gradient(45% 55% at 92% 10%, #e7f5fd 0%, rgba(231,245,253,0) 70%),
+                radial-gradient(60% 60% at 50% 105%, #eef0fb 0%, rgba(238,240,251,0) 70%),
+                #ffffff;">
+            <div class="p-6 sm:p-8">
+                {{-- Judul --}}
+                <div class="text-center">
+                    <p class="text-sm font-bold text-ink-soft sm:text-base">Profil Karakter &amp; Potensi Belajar</p>
+                    <p class="text-2xl font-extrabold leading-tight text-ink sm:text-3xl">{{ $anak }}</p>
+                </div>
+
+                <div class="mt-6 grid gap-6 md:grid-cols-2">
+                    {{-- Kolom kiri: iman & bahasa hati --}}
+                    <div class="space-y-5">
+                        <h3 class="text-base font-extrabold leading-tight text-ink">Karakter Iman<br class="hidden sm:block"> &amp; Bahasa Hati</h3>
+
+                        {{-- Kualitas iman --}}
+                        <div class="rounded-2xl bg-surface/70 p-4 ring-1 ring-line">
+                            <p class="text-xs font-semibold text-ink-soft">Kualitas Iman</p>
+                            <p class="text-xl font-extrabold uppercase leading-tight text-ink">{{ $keislaman['label'] }}</p>
+                            <span class="mt-1 inline-block h-1.5 w-8 rounded-full" style="background:{{ $warnaIslam }}"></span>
+                            <ul class="mt-3 flex flex-wrap gap-x-4 gap-y-2">
+                                @foreach ($keislaman['komponen'] as $i => $k)
+                                    <li class="flex items-center gap-1.5 text-xs">
+                                        <span class="h-2 w-2 rounded-full" style="background:{{ $hexKomponen[$i] }}"></span>
+                                        <span class="font-semibold text-ink">{{ $k['label'] }}</span>
+                                        <span class="text-ink-soft">{{ number_format($k['skor'], 1) }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+
+                        {{-- Hirarki bahasa hati --}}
+                        <div>
+                            <p class="text-sm font-bold text-ink">Hirarki Bahasa Hati</p>
+                            <ol class="mt-2 space-y-1.5">
+                                @foreach ($bahasa_hati as $i => $h)
+                                    <li class="flex items-center justify-between gap-3 rounded-xl px-3 py-2 text-sm text-white"
+                                        style="background:{{ $hexHati[$i] ?? '#5b6480' }}">
+                                        <span class="font-semibold">{{ $i + 1 }}. Bahasa {{ $h['label'] }}</span>
+                                        <span class="text-xs font-bold tabular-nums">{{ number_format($h['skor'], 1) }}</span>
+                                    </li>
+                                @endforeach
+                            </ol>
+                        </div>
+
+                        {{-- Pemicu motivasi --}}
+                        @if (! empty($pemicu_motivasi))
+                            <div>
+                                <p class="text-sm font-bold text-ink">Pemicu Motivasi Efektif</p>
+                                <p class="text-xs text-ink-soft">Sesuai bahasa hati {{ $bahasa_hati[0]['label'] ?? '-' }}</p>
+                                <ul class="mt-2 flex flex-wrap gap-1.5">
+                                    @foreach ($pemicu_motivasi as $m)
+                                        <li class="rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-ink">{{ $m }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- Kolom kanan: karakter & gaya belajar --}}
+                    <div class="space-y-5">
+                        <h3 class="text-base font-extrabold leading-tight text-ink md:text-right">Karakter<br class="hidden sm:block"> &amp; Gaya Belajar</h3>
+
+                        @if ($gayaTop)
+                            <div class="rounded-2xl bg-surface/70 p-4 ring-1 ring-line">
+                                <p class="text-xs font-semibold text-ink-soft">Dominasi Gaya Belajar</p>
+                                <p class="text-xl font-extrabold leading-tight text-ink">{{ $gayaTop['tipe'] }}</p>
+                                <p class="text-sm font-semibold" style="color:{{ $hexGaya[0] }}">{{ $gayaTop['label_arab'] }}</p>
+                                <p class="mt-1.5 text-xs leading-relaxed text-ink-soft">{{ ucfirst($gayaTop['arti']) }}.</p>
+                            </div>
+
+                            @if ($gayaTop['lingkungan'])
+                                <div class="rounded-2xl bg-brand-soft p-4">
+                                    <p class="text-sm font-bold text-ink">Lingkungan Belajar Ideal</p>
+                                    <p class="mt-1 text-xs leading-relaxed text-ink-soft">{{ $gayaTop['lingkungan'] }}</p>
+                                </div>
+                            @endif
+                        @endif
+
+                        <div>
+                            <p class="text-sm font-bold text-ink">Peringkat Gaya Belajar</p>
+                            <ol class="mt-2 space-y-2">
+                                @foreach ($gaya_lengkap as $i => $g)
+                                    <li class="flex items-start gap-2.5">
+                                        <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+                                              style="background:{{ $hexGaya[$i] ?? '#5b6480' }}">{{ $i + 1 }}</span>
+                                        <span class="min-w-0">
+                                            <span class="block text-sm font-bold leading-tight text-ink">{{ $g['label_arab'] }} ({{ $g['tipe'] }})</span>
+                                            <span class="block text-xs text-ink-soft">{{ ucfirst($g['arti']) }} &middot; {{ number_format($g['skor'], 1) }}/10</span>
+                                        </span>
+                                    </li>
+                                @endforeach
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="mt-6 border-t border-line pt-3 text-center text-[11px] text-ink-soft">
+                    Si Bakat Hebat &middot; Tes Karakter TB-40 &middot; {{ $observasi->tanggal?->format('d-m-Y') }}
+                </p>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button type="button" id="unduhInfografis"
+                    class="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-60">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+                <span id="labelUnduhInfografis">Unduh infografis (PNG)</span>
+            </button>
+            <p id="gagalInfografis" class="mt-2 hidden text-xs font-medium text-red-600">
+                Gagal membuat gambar. Silakan coba lagi, atau gunakan tombol Download PDF di bawah.
+            </p>
+        </div>
+    </section>
+
+    {{-- Penutup: ajakan unduh + kirim email + disclaimer --}}
+    <section id="simpan-laporan" class="reveal rounded-3xl bg-surface p-6 text-center shadow-sm ring-1 ring-line sm:p-8">
         <h2 class="text-lg font-bold text-ink">Simpan laporan {{ $anak }}</h2>
         <p class="mx-auto mt-1 max-w-md text-sm text-ink-soft">
-            Unduh versi PDF-nya untuk arsip sekolah atau dibaca bersama orang tua.
+            Unduh versi PDF-nya untuk arsip sekolah, atau kirim langsung ke email orang tua.
         </p>
         <a href="{{ route('hasil.pdf', $observasi) }}"
            class="mt-4 inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-white shadow-sm hover:opacity-90 transition"
@@ -328,6 +550,40 @@
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
             Download PDF
         </a>
+
+        {{-- Kirim laporan PDF ke email --}}
+        <div class="mx-auto mt-6 max-w-md border-t border-line pt-6">
+            @if (session('kirim_sukses'))
+                <p class="mb-4 rounded-xl bg-brand-soft px-4 py-3 text-sm font-medium text-ink">
+                    {{ session('kirim_sukses') }}
+                </p>
+            @endif
+
+            <p class="text-sm font-semibold text-ink">Kirim laporan PDF lewat email</p>
+            <p class="mt-1 text-xs text-ink-soft">
+                Laporan lengkap dikirim sebagai lampiran PDF. Pengiriman butuh beberapa detik.
+            </p>
+
+            <form method="POST" action="{{ route('hasil.kirim-email', $observasi) }}"
+                  x-data="{ mengirim: false }" @submit="mengirim = true"
+                  class="mt-3 flex flex-col gap-2 sm:flex-row">
+                @csrf
+                <label for="email-tujuan" class="sr-only">Alamat email tujuan</label>
+                <input type="email" name="email" id="email-tujuan" required
+                       value="{{ old('email', $observasi->peserta->user->email) }}"
+                       placeholder="nama@email.com"
+                       class="w-full flex-1 rounded-full border border-line bg-page px-4 py-2.5 text-sm text-ink placeholder:text-ink-soft/60 focus:border-brand focus:outline-none">
+                <button type="submit" x-bind:disabled="mengirim"
+                        class="inline-flex items-center justify-center gap-2 rounded-full border border-line px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-60">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/></svg>
+                    <span x-text="mengirim ? 'Mengirim…' : 'Kirim'">Kirim</span>
+                </button>
+            </form>
+
+            @error('email')
+                <p class="mt-2 text-left text-xs font-medium text-red-600">{{ $message }}</p>
+            @enderror
+        </div>
     </section>
 
     <footer class="reveal rounded-3xl bg-line p-5 text-center">
@@ -372,6 +628,77 @@
         };
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
+
+        // Unduh infografis jadi PNG. Animasi "reveal" dimatikan sementara supaya
+        // elemen tidak tertangkap dalam keadaan setengah transparan.
+        const tombolUnduh = document.getElementById('unduhInfografis');
+        const papan = document.getElementById('infografis');
+        if (tombolUnduh && papan) {
+            const label = document.getElementById('labelUnduhInfografis');
+            const gagal = document.getElementById('gagalInfografis');
+            const teksAwal = label.textContent;
+
+            tombolUnduh.addEventListener('click', async () => {
+                if (typeof html2canvas !== 'function') {
+                    gagal.classList.remove('hidden');
+                    return;
+                }
+                gagal.classList.add('hidden');
+                tombolUnduh.disabled = true;
+                label.textContent = 'Menyiapkan gambar…';
+
+                try {
+                    const canvas = await html2canvas(papan, {
+                        scale: Math.min(2, window.devicePixelRatio || 1) * 1.5,
+                        backgroundColor: '#ffffff',
+                        useCORS: true,
+                        logging: false,
+                    });
+                    const tautan = document.createElement('a');
+                    tautan.download = @json('infografis-'.\Illuminate\Support\Str::slug($anak).'-'.$observasi->id.'.png');
+                    tautan.href = canvas.toDataURL('image/png');
+                    tautan.click();
+                } catch (e) {
+                    gagal.classList.remove('hidden');
+                } finally {
+                    tombolUnduh.disabled = false;
+                    label.textContent = teksAwal;
+                }
+            });
+        }
+
+        // Donat keislaman: cincin penuh = poin maksimal, jadi panjang bagian
+        // berwarna menunjukkan capaian, bukan sekadar perbandingan antar poin.
+        const donat = document.getElementById('donatKeislaman');
+        if (donat && window.Chart) {
+            new Chart(donat, {
+                type: 'doughnut',
+                data: {
+                    labels: @json(array_column($keislaman['komponen'], 'label')).concat(['Belum tercapai']),
+                    datasets: [{
+                        data: @json(array_map(fn ($k) => $k['skor'], $keislaman['komponen'])).concat([{{ $sisaPoin }}]),
+                        backgroundColor: @json($hexKomponen).concat(['#e4eaf3']),
+                        borderColor: '#ffffff',
+                        borderWidth: 2,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '68%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (item) => item.dataIndex === {{ count($keislaman['komponen']) }}
+                                    ? 'Belum tercapai: ' + item.parsed.toFixed(2) + ' poin'
+                                    : item.label + ': ' + item.parsed.toFixed(2) + ' dari 10',
+                            },
+                        },
+                    },
+                },
+            });
+        }
 
         const ctx = document.getElementById('radarKarakter');
         if (ctx && window.Chart) {

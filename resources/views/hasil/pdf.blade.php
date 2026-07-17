@@ -58,9 +58,26 @@
             </td>
         </tr>
     </table>
-    <p style="margin-top:4px; font-size:10px; color:#6b7280;">
-        Dihitung dari {{ $keislaman['total'] }} soal ibadah (no. 10&ndash;18): membaca Al-Qur'an, muroja'ah, wudhu,
-        sholat wajib, adab Islami, mengajak beribadah, Ramadhan, dan tayamum.
+    {{-- Rincian 3 poin penyusun. Infografis & donat hanya di web: DomPDF tidak menjalankan JavaScript. --}}
+    @php $hexKomponen = ['#2a78d6', '#008300', '#e87ba4']; @endphp
+    <table style="width:100%; border-collapse:collapse; margin-top:8px; font-size:10px;">
+        @foreach ($keislaman['komponen'] as $i => $k)
+            <tr>
+                <td style="width:14px; padding:2px 0;">
+                    <table style="border-collapse:collapse;"><tr>
+                        <td style="width:8px; height:8px; background:{{ $hexKomponen[$i] }}; padding:0;"></td>
+                    </tr></table>
+                </td>
+                <td style="padding:2px 0;"><strong>{{ $k['label'] }}</strong> <span style="color:#6b7280;">&mdash; {{ $k['aspek'] }}, {{ $k['sumber'] }}</span></td>
+                <td style="padding:2px 0; text-align:right; white-space:nowrap;">{{ number_format($k['skor'], 1) }} dari 10</td>
+            </tr>
+        @endforeach
+    </table>
+    <p style="margin-top:6px; font-size:10px; color:#6b7280;">
+        <strong>Catatan:</strong> poin keislaman diambil dari aqidah (prinsip), ibadah (kewajiban),
+        serta adab dan akhlaq (perilaku). Rata-rata ketiganya {{ number_format($keislaman['skor'], 2) }}
+        dari 10, sehingga masuk kategori keislaman
+        <strong style="color:{{ $warnaIslam }};">{{ $keislaman['label'] }}</strong>.
     </p>
 
     <h2>Nilai Ringkas</h2>

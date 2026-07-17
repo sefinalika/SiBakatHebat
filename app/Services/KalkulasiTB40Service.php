@@ -38,6 +38,31 @@ class KalkulasiTB40Service
     ];
 
     /**
+     * Cara menyentuh hati anak per bahasa hati — dipakai sebagai "pemicu motivasi
+     * efektif" pada infografis. Diringkas dari docs/prd/prd_dimensi.md.
+     */
+    public const PEMICU_BAHASA_HATI = [
+        'perlindungan' => [
+            'Pemberian hadiah',
+            'Kata-kata penyemangat',
+            'Ditolong saat kesulitan',
+            'Diajak bersaing sehat',
+        ],
+        'pelayanan' => [
+            'Dilayani kemauannya',
+            'Dijaga rahasianya',
+            'Dimaafkan kesalahannya',
+            'Disikapi dengan sabar',
+        ],
+        'kebersamaan' => [
+            'Ditemani dan didengarkan',
+            'Diberi senyuman',
+            'Ditepati janjinya',
+            'Diajak bercanda',
+        ],
+    ];
+
+    /**
      * Rata-rata nilai pada rentang soal [dari, sampai] (inklusif).
      *
      * @param  array<int, int|float>  $jawaban  [nomor_soal => nilai]
@@ -110,36 +135,67 @@ class KalkulasiTB40Service
     ];
 
     /**
-     * Persentase keislaman peserta, dihitung dari section IBADAH (soal 10-18):
-     * praktik ibadah harian — baca Qur'an, muroja'ah, wudhu, sholat, adab Islami,
-     * mengajak beribadah, Ramadhan, tayamum.
+     * Tiga poin penyusun nilai keislaman: prinsip (aqidah), kewajiban (ibadah),
+     * dan perilaku (adab & akhlaq). Masing-masing berskala 1-10, urut sesuai
+     * slot warna kategorikal pada laporan.
+     *
+     * Adab dan akhlaq sengaja satu poin: keduanya sama-sama dinilai lewat 40
+     * karakter TB-40, sehingga tidak ada soal yang terhitung dua kali.
+     *
+     * @param  array<int, int|float>  $jawaban  [nomor_soal => nilai]
+     * @return array<int, array{kunci:string, label:string, aspek:string, skor:float, sumber:string}>
+     */
+    public function komponenKeislaman(array $jawaban): array
+    {
+        return [
+            [
+                'kunci' => 'aqidah',
+                'label' => 'Aqidah',
+                'aspek' => 'prinsip',
+                'skor' => $this->rataRataSection($jawaban, ...self::SECTION_AQIDAH),
+                'sumber' => 'soal 1–9',
+            ],
+            [
+                'kunci' => 'ibadah',
+                'label' => 'Ibadah',
+                'aspek' => 'kewajiban',
+                'skor' => $this->rataRataSection($jawaban, ...self::SECTION_IBADAH),
+                'sumber' => 'soal 10–18',
+            ],
+            [
+                'kunci' => 'adab_akhlaq',
+                'label' => 'Adab & Akhlaq',
+                'aspek' => 'perilaku',
+                'skor' => $this->rataRataSection($jawaban, ...self::SECTION_TB40),
+                'sumber' => '40 karakter TB-40',
+            ],
+        ];
+    }
+
+    /**
+     * Persentase keislaman peserta: rata-rata tiga poin — aqidah, ibadah, dan
+     * adab & akhlaq — lalu dipetakan ke kategori keislaman.
      *
      * Skala jawaban 1-10 dipetakan langsung ke persen (skor 7.5 => 75%).
      *
      * @param  array<int, int|float>  $jawaban  [nomor_soal => nilai]
-     * @return array{skor:float, persen:int, warna:string, label:string, dijawab:int, total:int}
+     * @return array{skor:float, persen:int, warna:string, label:string, komponen:array<int, array<string, mixed>>, maks_poin:float}
      */
     public function persentaseKeislaman(array $jawaban): array
     {
-        [$dari, $sampai] = self::SECTION_IBADAH;
+        $komponen = $this->komponenKeislaman($jawaban);
 
-        $skor = $this->rataRataSection($jawaban, $dari, $sampai);
+        // Rata-rata ketiga poin; setara total poin dibagi poin maksimal (3 x 10).
+        $skor = round(array_sum(array_column($komponen, 'skor')) / count($komponen), 2);
         $warna = $this->tentukanWarna($skor);
-
-        $dijawab = 0;
-        for ($soal = $dari; $soal <= $sampai; $soal++) {
-            if (isset($jawaban[$soal])) {
-                $dijawab++;
-            }
-        }
 
         return [
             'skor' => $skor,
             'persen' => (int) round($skor * 10),
             'warna' => $warna,
             'label' => self::LABEL_KEISLAMAN[$warna],
-            'dijawab' => $dijawab,
-            'total' => $sampai - $dari + 1,
+            'komponen' => $komponen,
+            'maks_poin' => count($komponen) * 10.0,
         ];
     }
 
@@ -345,7 +401,8 @@ class KalkulasiTB40Service
     {
         $observasi->loadMissing(['peserta.user', 'hasilObservasi.karakter']);
 
-        $nama = $observasi->peserta?->user?->name ?? 'Peserta';
+        // Nama anak yang dites, bukan pemilik akun yang mengisi tes.
+        $nama = $observasi->peserta?->nama ?? 'Peserta';
         $jawaban = $observasi->jawaban()->pluck('nilai', 'nomor_soal')->all();
         $skorKarakter = $observasi->hasilObservasi
             ->pluck('skor', 'karakter_id')->map(fn ($s) => (float) $s)->all();
@@ -445,17 +502,17 @@ class KalkulasiTB40Service
                 'Dengarkan penjelasan guru, audio, atau rekaman materi',
                 'Belajar sambil membaca dengan suara nyaring',
                 'Perbanyak diskusi dan tanya-jawab',
-            ]],
+            ], 'lingkungan' => 'Suasananya cukup hening, tidak berisik, dan tidak ada suara gaduh di sekitar.'],
             'al_fuad' => ['tipe' => 'Kinestetik', 'arti' => 'belajar dengan bergerak & praktik', 'tips' => [
                 'Praktik atau peragakan langsung materinya',
                 'Gunakan alat/benda nyata sebagai media belajar',
                 'Belajar sambil bergerak, hindari terlalu lama diam',
-            ]],
+            ], 'lingkungan' => 'Di alam terbuka, lapangan, bengkel, atau tempat lain yang memungkinkan banyak gerakan.'],
             'al_bashar' => ['tipe' => 'Visual', 'arti' => 'belajar dengan melihat', 'tips' => [
                 'Gunakan gambar, diagram, atau mind map',
                 'Tonton video pembelajaran',
                 'Buat catatan berwarna dan sorot poin penting',
-            ]],
+            ], 'lingkungan' => 'Penerangan cukup dan pemandangan di sekitar tempat belajar tampak menarik.'],
         ];
 
         $out = [];
@@ -468,6 +525,7 @@ class KalkulasiTB40Service
                 'skor' => $g['skor'],
                 'persen' => (int) round($g['skor'] * 10),
                 'tips' => $m['tips'] ?? [],
+                'lingkungan' => $m['lingkungan'] ?? '',
             ];
         }
 
@@ -581,10 +639,16 @@ class KalkulasiTB40Service
             'karakter_dominan' => $data['top']->first()?->karakter?->terjemahan ?? '-',
         ];
 
+        // Pemicu motivasi mengikuti bahasa hati yang paling dominan.
+        $hatiDominan = $data['bahasa_hati'][0] ?? null;
+
         return array_merge($data, [
             'kode' => $this->kodeHasil($observasi),
             'ringkasan' => $ringkasan,
             'gaya_lengkap' => $gayaLengkap,
+            'pemicu_motivasi' => $hatiDominan
+                ? (self::PEMICU_BAHASA_HATI[$hatiDominan['key']] ?? [])
+                : [],
             'analisis' => $this->analisisKepribadian($observasi),
             'rek_jurusan' => $this->rekomendasiJurusan($observasi),
             'rek_profesi' => $this->rekomendasiProfesi($observasi),
