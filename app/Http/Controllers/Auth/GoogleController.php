@@ -68,7 +68,11 @@ class GoogleController extends Controller
         Auth::login($user, true);
 
         // Kirim notifikasi email login
-        Mail::send(new LoginNotificationMail($user));
+        try {
+            Mail::send(new LoginNotificationMail($user));
+        } catch (\Exception $e) {
+            \Log::error('Gagal kirim email login: ' . $e->getMessage());
+        }
 
         // Akun Google belum punya nama pengguna — minta dilengkapi dulu, persis
         // seperti user yang mendaftar manual.
