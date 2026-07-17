@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirect;
 
 class GoogleController extends Controller
@@ -36,13 +37,31 @@ class GoogleController extends Controller
             } else {
                 $googleUser = Socialite::driver('google')->user();
             }
+        } catch (InvalidStateException $e) {
+            // State tidak cocok: cookie session tidak ikut terkirim saat Google
+            // memulangkan pengguna. Umumnya karena alamat yang dibuka berbeda
+            // dengan GOOGLE_REDIRECT_URI (mis. 127.0.0.1 vs localhost), atau
+            // sesi sudah kedaluwarsa. Exception ini tidak membawa pesan apa pun.
+            \Log::warning('Google OAuth: state tidak cocok.', [
+                'host_diminta' => request()->getSchemeAndHttpHost(),
+                'redirect_uri' => config('services.google.redirect'),
+            ]);
+
+            return redirect()->route('login')->withErrors([
+                'email' => 'Sesi login Google sudah kedaluwarsa atau alamat situs tidak cocok. '
+                    .'Silakan buka ulang halaman login, lalu coba lagi.',
+            ]);
         } catch (\Throwable $e) {
             \Log::error('Google OAuth Error: ' . $e->getMessage(), [
                 'exception' => $e,
                 'trace' => $e->getTraceAsString(),
             ]);
-            return redirect()->route('login')
-                ->withErrors(['email' => 'Gagal login dengan Google: ' . $e->getMessage()]);
+
+            $pesan = $e->getMessage() !== ''
+                ? 'Gagal login dengan Google: ' . $e->getMessage()
+                : 'Gagal login dengan Google. Silakan coba lagi beberapa saat lagi.';
+
+            return redirect()->route('login')->withErrors(['email' => $pesan]);
         }
 
         $user = User::where('google_id', $googleUser->getId())
