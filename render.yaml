@@ -1,0 +1,97 @@
+# Render Blueprint untuk Si Bakat Hebat.
+# Membuat 1 web service (Docker) + 1 database PostgreSQL gratis, dan
+# menyambungkan variabel database secara otomatis.
+#
+# APP_KEY & APP_URL diisi manual saat setup (Render akan meminta) —
+# lihat DEPLOY-RENDER.md.
+
+services:
+  - type: web
+    name: si-bakat-hebat
+    runtime: docker
+    plan: free
+    healthCheckPath: /up
+    envVars:
+      - key: APP_NAME
+        value: "Si Bakat Hebat"
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        sync: false            # isi hasil: php artisan key:generate --show
+      - key: APP_URL
+        sync: false            # isi setelah tahu URL, mis. https://si-bakat-hebat.onrender.com
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: si-bakat-hebat-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: si-bakat-hebat-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: si-bakat-hebat-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: si-bakat-hebat-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: si-bakat-hebat-db
+          property: password
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database          # email hasil dikirim lewat antrean (worker jalan di container)
+
+      # --- Email hasil tes ---
+      # WAJIB diisi kalau ingin email benar-benar terkirim. Selama MAIL_MAILER=log,
+      # email hanya ditulis ke log dan TIDAK pernah sampai ke guru/wali murid.
+      # Untuk Gmail: MAIL_MAILER=smtp, MAIL_HOST=smtp.gmail.com, MAIL_PORT=587,
+      # MAIL_USERNAME=email Anda, MAIL_PASSWORD=App Password (bukan password biasa).
+      - key: MAIL_MAILER
+        sync: false
+      - key: MAIL_HOST
+        sync: false
+      - key: MAIL_PORT
+        sync: false
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: MAIL_SCHEME
+        sync: false             # 'tls' untuk port 587
+      - key: MAIL_FROM_ADDRESS
+        sync: false             # alamat pengirim, mis. no-reply@domain-anda.com
+      - key: MAIL_FROM_NAME
+        value: "Si Bakat Hebat"
+
+      # --- Akun staf pertama (lihat DEPLOY-RENDER.md) ---
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: GURU_PASSWORD
+        sync: false
+
+      # --- Login Google (opsional) ---
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_REDIRECT_URI
+        sync: false             # https://URL-ANDA/auth/google/callback
+
+      - key: WHATSAPP_NUMBER
+        value: "082122945262"
+
+databases:
+  - name: si-bakat-hebat-db
+    plan: free
+    databaseName: sibakathebat
+    user: sibakathebat

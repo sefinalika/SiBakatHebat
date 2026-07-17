@@ -1,0 +1,35 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Palet Si Bakat Hebat — putih, biru langit, navy, aksen kuning.
+       Dipakai lewat utility: bg-page, text-ink, bg-brand, border-line, dst. */
+    --color-page: #f7f9fc;      /* latar halaman (putih kebiruan) */
+    --color-surface: #ffffff;   /* kartu */
+    --color-line: #e4eaf3;      /* garis & border */
+
+    --color-ink: #2b2a6b;       /* judul — navy/indigo */
+    --color-ink-soft: #5b6480;  /* teks sekunder */
+
+    --color-brand: #22a6e8;     /* biru langit — aksen utama */
+    --color-brand-dark: #0d86c6;
+    --color-brand-soft: #e7f5fd;
+
+    --color-accent: #f5b921;    /* kuning — penegas & tombol aksi */
+    --color-accent-soft: #fef3d8;
+}
+
+[x-cloak] { display: none !important; }
+
+/* Garis bawah kuning pada kata kunci (seperti judul di halaman utama). */
+.underline-accent {
+    background-image: linear-gradient(var(--color-accent), var(--color-accent));
+    background-repeat: no-repeat;
+    background-position: 0 88%;
+    background-size: 100% 0.18em;
+}

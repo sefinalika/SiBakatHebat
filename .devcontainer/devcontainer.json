@@ -1,0 +1,13 @@
+{
+    "name": "Si Bakat Hebat",
+    "image": "mcr.microsoft.com/devcontainers/php:1-8.3-bookworm",
+    "forwardPorts": [8000],
+    "portsAttributes": {
+        "8000": {
+            "label": "Si Bakat Hebat (web)",
+            "onAutoForward": "openPreview"
+        }
+    },
+    "postCreateCommand": "bash .devcontainer/setup.sh",
+    "postStartCommand": "nohup php artisan serve --host=0.0.0.0 --port=8000 > storage/logs/serve.log 2>&1 &"
+}

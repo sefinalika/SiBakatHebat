@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(php --version)",
+      "PowerShell(composer --version)",
+      "PowerShell(cd \"c:\\\\Al-Amanah's Project\\\\minatBakatTest\"; php artisan --version; Write-Output \"---COMPOSER PKGS---\"; \\(Get-Content composer.json | ConvertFrom-Json\\).require | ConvertTo-Json; Write-Output \"---DOMPDF?---\"; if \\(Test-Path \"vendor/barryvdh/laravel-dompdf\"\\) { \"dompdf installed\" } else { \"dompdf NOT installed\" })",
+      "PowerShell(cd \"c:\\\\Al-Amanah's Project\\\\minatBakatTest\"; if \\(Test-Path \"vendor/barryvdh/laravel-dompdf\"\\) { \"dompdf installed OK\" } else { \"MISSING\" }; \\(Get-Content composer.json | ConvertFrom-Json\\).require | ConvertTo-Json)",
+      "PowerShell(Get-Service | Where-Object { $_.Name -match 'mysql|mariadb' } | Select-Object Name, Status; Write-Output \"---LISTEN 3306---\"; \\(Get-NetTCPConnection -State Listen -LocalPort 3306 -ErrorAction SilentlyContinue | Measure-Object\\).Count; Write-Output \"---common bins---\"; foreach \\($p in @\\(\"C:\\\\xampp\\\\mysql\\\\bin\\\\mysqld.exe\",\"C:\\\\laragon\\\\bin\\\\mysql\",\"C:\\\\Program Files\\\\MySQL\"\\)\\) { if \\(Test-Path $p\\) { \"FOUND: $p\" } })",
+      "Bash(touch storage/smoke.sqlite)",
+      "Bash(DB_CONNECTION=sqlite DB_DATABASE=\"$\\(pwd\\)/storage/smoke.sqlite\" SESSION_DRIVER=array CACHE_STORE=array QUEUE_CONNECTION=sync php artisan migrate --seed --force)",
+      "Bash(DB_CONNECTION=sqlite DB_DATABASE=\"C:/Al-Amanah's Project/minatBakatTest/storage/smoke.sqlite\" SESSION_DRIVER=array CACHE_STORE=array QUEUE_CONNECTION=sync php artisan migrate --seed --force)",
+      "Bash(rm -f app/Http/Controllers/Api/HasilApiController.php routes/api.php)",
+      "Bash(rmdir app/Http/Controllers/Api)",
+      "PowerShell(cd \"c:\\\\Al-Amanah's Project\\\\minatBakatTest\"; $env:SESSION_DRIVER='array'; $env:CACHE_STORE='array'; $job = Start-Job -ScriptBlock { Set-Location \"c:\\\\Al-Amanah's Project\\\\minatBakatTest\"; $env:SESSION_DRIVER='array'; $env:CACHE_STORE='array'; php artisan serve --port=8123 --no-reload }; Start-Sleep -Seconds 5; try { $r = Invoke-WebRequest -Uri \"http://127.0.0.1:8123/\" -UseBasicParsing -TimeoutSec 15; Write-Output \"STATUS=$\\($r.StatusCode\\)\"; $c = $r.Content; Write-Output \\(\"Observasi Karakter TB-40 present: \" + \\($c -match 'Observasi Karakter TB-40'\\)\\); Write-Output \\(\"PKBM ADZKA present: \" + \\($c -match 'PKBM ADZKA'\\)\\); Write-Output \\(\"Mulai Tes present: \" + \\($c -match 'Mulai Tes'\\)\\); Write-Output \\(\"Kondisi Fisik present: \" + \\($c -match 'Kondisi Fisik'\\)\\); Write-Output \\(\"vite css linked: \" + \\($c -match 'build/assets/app-'\\)\\); Write-Output \\(\"HTML length: \" + $c.Length\\) } catch { Write-Output \"ERROR: $_\" } finally { Stop-Job $job; Remove-Job $job })",
+      "Bash(php -l \"C:\\\\Al-Amanah's Project\\\\minatBakatTest\\\\database\\\\data\\\\wilayah.php\")",
+      "Bash(php -r '$d = require \"C:\\\\\\\\Al-Amanah'\\\\''s Project\\\\\\\\minatBakatTest\\\\\\\\database\\\\\\\\data\\\\\\\\wilayah.php\"; echo \"Provinces: \".count\\($d\\).\"\\\\n\"; $t=0; foreach\\($d as $c\\){$t+=count\\($c\\);} echo \"Cities: \".$t.\"\\\\n\";')",
+      "Bash(php -l database/seeders/KarakterSeeder.php)",
+      "Bash(php -l \"C:\\\\Al-Amanah's Project\\\\minatBakatTest\\\\database\\\\seeders\\\\KarakterSeeder.php\")",
+      "Bash(cd \"c:/Al-Amanah's Project/minatBakatTest\" && rm -f storage/smoke*.sqlite && echo cleaned)",
+      "Bash(py --version)",
+      "Bash(php --version)",
+      "Bash(awk '-F\\\\t' 'NR==2{for\\(i=1;i<=NF;i++\\) print i\": \"$i}' prd_dimensi.md)",
+      "Bash(awk -F'\\\\t' 'NR>=2 && NR<=42 {print NR\": \"$1\" \"$2}' prd_dimensi.md)",
+      "Bash(python -c ' *)",
+      "Bash(php -r ' *)",
+      "Bash(php gen.php)",
+      "Bash(php transform.php)",
+      "Bash(php -l \"C:/Al-Amanah's Project/minatBakatTest/database/seeders/KarakterSeeder.php\")",
+      "PowerShell(cd \"c:\\\\Al-Amanah's Project\\\\minatBakatTest\"; $r = Test-NetConnection -ComputerName 127.0.0.1 -Port 3306 -WarningAction SilentlyContinue; \"MySQL 3306 reachable: $\\($r.TcpTestSucceeded\\)\"; \"build manifest: $\\(Test-Path public/build/manifest.json\\)\")",
+      "PowerShell(cd \"c:\\\\Al-Amanah's Project\\\\minatBakatTest\"; $env:DB_CONNECTION='sqlite'; $env:DB_DATABASE='C:/Al-Amanah''s Project/minatBakatTest/database/database.sqlite'; $env:SESSION_DRIVER='database'; $env:CACHE_STORE='database'; $env:QUEUE_CONNECTION='sync'; $env:MAIL_MAILER='log'; $env:APP_URL='http://127.0.0.1:8000'; php artisan serve --host=127.0.0.1 --port=8000)",
+      "PowerShell(Start-Sleep -Seconds 4; try { $r=Invoke-WebRequest \"http://127.0.0.1:8000/\" -UseBasicParsing -TimeoutSec 15; \"Landing: $\\($r.StatusCode\\) | Si Bakat Hebat: $\\($r.Content -match 'Si Bakat Hebat'\\) | Masuk btn: $\\($r.Content -match 'Masuk'\\)\" } catch { \"ERR: $\\($_.Exception.Message\\)\" })",
+      "PowerShell(cd \"c:\\\\Al-Amanah's Project\\\\minatBakatTest\"; \\(Get-Content .env -Raw\\) -replace 'WHATSAPP_NUMBER=6281234567890','WHATSAPP_NUMBER=082122945262' | Set-Content .env -NoNewline -Encoding utf8; \"env updated:\"; Select-String -Path .env -Pattern 'WHATSAPP_NUMBER')",
+      "Bash(DB_CONNECTION=sqlite DB_DATABASE='C:/Al-Amanah'\\\\''s Project/minatBakatTest/database/database.sqlite' SESSION_DRIVER=database CACHE_STORE=database QUEUE_CONNECTION=sync php artisan tinker '--execute=$u=App\\\\Models\\\\User::where\\('\\\\''email'\\\\'','\\\\''admin@sibakathebat.test'\\\\''\\)->first\\(\\); if\\($u\\){$u->email='\\\\''admin@gmail.com'\\\\'';$u->username='\\\\''admin@gmail.com'\\\\'';$u->save\\(\\);$m='\\\\''updated'\\\\'';} else {App\\\\Models\\\\User::updateOrCreate\\(['\\\\''email'\\\\''=>'\\\\''admin@gmail.com'\\\\''],['\\\\''name'\\\\''=>'\\\\''Super Admin'\\\\'','\\\\''username'\\\\''=>'\\\\''admin@gmail.com'\\\\'','\\\\''password'\\\\''=>'\\\\''password'\\\\'','\\\\''role'\\\\''=>'\\\\''admin'\\\\'']\\);$m='\\\\''ensured'\\\\'';} $a=App\\\\Models\\\\User::where\\('\\\\''email'\\\\'','\\\\''admin@gmail.com'\\\\''\\)->first\\(\\); echo $m.'\\\\'' | email='\\\\''.$a->email.'\\\\'' username='\\\\''.$a->username.'\\\\'' role='\\\\''.$a->role.PHP_EOL;')",
+      "Bash(DB_CONNECTION=sqlite DB_DATABASE='C:/Al-Amanah'\\\\''s Project/minatBakatTest/database/database.sqlite' SESSION_DRIVER=database CACHE_STORE=database QUEUE_CONNECTION=sync php artisan tinker '--execute= *)",
+      "PowerShell(cd \"c:\\\\Al-Amanah's Project\\\\minatBakatTest\"; if \\(-not \\(Test-Path public/img\\)\\) { New-Item -ItemType Directory public/img | Out-Null }; Copy-Item docs/img/logo.png public/img/logo.png -Force; if \\(Test-Path public/img/logo.png\\) { \"copied to public/img/logo.png \\($\\(\\(Get-Item public/img/logo.png\\).Length\\) bytes\\)\" } else { \"FAILED\" })",
+      "Bash(DB_CONNECTION=sqlite DB_DATABASE='C:/Al-Amanah'\\\\''s Project/minatBakatTest/database/database.sqlite' SESSION_DRIVER=database CACHE_STORE=database QUEUE_CONNECTION=sync MAIL_MAILER=array APP_URL=http://127.0.0.1:8000 php artisan tinker '--execute= *)",
+      "PowerShell(Start-Sleep -Seconds 6; try { $r=Invoke-WebRequest \"http://127.0.0.1:8000/login\" -UseBasicParsing -TimeoutSec 20; \"server up: $\\($r.StatusCode\\)\" } catch { \"still down: $\\($_.Exception.Message\\)\" })"
+    ],
+    "additionalDirectories": [
+      "C:\\Al-Amanah's Project\\minatBakatTest\\storage"
+    ]
+  }
+}

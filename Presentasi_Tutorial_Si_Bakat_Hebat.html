@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial Si Bakat Hebat - Panduan Lengkap</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .page {
+            width: 210mm;
+            height: 297mm;
+            margin: 10mm auto;
+            padding: 20mm;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            page-break-after: always;
+        }
+
+        .cover-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #5B9BD5 0%, #2E5C8A 100%);
+            color: white;
+            min-height: 100%;
+        }
+
+        .cover-page h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .cover-page .subtitle {
+            font-size: 24px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .cover-page .logo {
+            font-size: 60px;
+            margin-bottom: 30px;
+        }
+
+        .cover-page .footer {
+            position: absolute;
+            bottom: 40px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        h1 {
+            color: #2E5C8A;
+            font-size: 36px;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #5B9BD5;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #5B9BD5;
+            font-size: 28px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            color: #2E5C8A;
+            font-size: 20px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            background: #E8F4F8;
+            padding: 15px;
+            border-left: 4px solid #5B9BD5;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .step {
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 4px solid #5B9BD5;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #5B9BD5;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #5B9BD5;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .feature-box {
+            background: linear-gradient(135deg, #E8F4F8 0%, #F0F8FF 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #5B9BD5;
+        }
+
+        .feature-box h4 {
+            color: #2E5C8A;
+            margin-bottom: 10px;
+        }
+
+        .tip {
+            background: #FFF9E6;
+            padding: 15px;
+            border-left: 4px solid #FFA500;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .tip::before {
+            content: "💡 Tip: ";
+            font-weight: bold;
+            color: #FFA500;
+        }
+
+        .warning {
+            background: #FFE6E6;
+            padding: 15px;
+            border-left: 4px solid #FF4444;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .warning::before {
+            content: "⚠️ Penting: ";
+            font-weight: bold;
+            color: #FF4444;
+        }
+
+        .role-box {
+            background: white;
+            border: 2px solid #5B9BD5;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .role-box h3 {
+            color: #2E5C8A;
+            margin-bottom: 10px;
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .toc-item {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+
+        .toc-item.level2 {
+            margin-left: 30px;
+            font-size: 14px;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .page {
+                box-shadow: none;
+                margin: 0;
+                padding: 20mm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- PAGE 1: COVER -->
+<div class="page cover-page">
+    <div class="logo">💡🌸</div>
+    <h1>Si Bakat Hebat</h1>
+    <div class="subtitle">Tes Karakter TB-40 untuk Guru dan Wali Murid</div>
+    <div style="margin-top: 60px; font-size: 16px;">
+        <p><strong>Panduan Lengkap Pengoperasian Aplikasi</strong></p>
+        <p style="margin-top: 40px; font-size: 14px;">Temukan Bakat Terbaik Anak Bersama Si Bakat Hebat</p>
+    </div>
+    <div class="footer">
+        <p>Versi 1.0</p>
+        <p>© 2026 Si Bakat Hebat</p>
+    </div>
+</div>
+
+<!-- PAGE 2: DAFTAR ISI -->
+<div class="page">
+    <h1>Daftar Isi</h1>
+    <div class="content" style="margin-top: 30px;">
+        <div class="toc-item"><strong>1. Pengenalan Aplikasi</strong></div>
+        <div class="toc-item level2">- Apa itu Si Bakat Hebat?</div>
+        <div class="toc-item level2">- Fitur Utama</div>
+        <div class="toc-item level2">- Target Pengguna</div>
+
+        <div class="toc-item" style="margin-top: 15px;"><strong>2. Persiapan Awal</strong></div>
+        <div class="toc-item level2">- Persyaratan Sistem</div>
+        <div class="toc-item level2">- Cara Akses Aplikasi</div>
+
+        <div class="toc-item" style="margin-top: 15px;"><strong>3. Registrasi & Login</strong></div>
+        <div class="toc-item level2">- Membuat Akun Baru</div>
+        <div class="toc-item level2">- Login Email/Password</div>
+        <div class="toc-item level2">- Login dengan Google</div>
+        <div class="toc-item level2">- Lupa Password</div>
+
+        <div class="toc-item" style="margin-top: 15px;"><strong>4. Panduan per Role</strong></div>
+        <div class="toc-item level2">- Untuk Guru/Wali Murid</div>
+        <div class="toc-item level2">- Untuk Admin</div>
+
+        <div class="toc-item" style="margin-top: 15px;"><strong>5. Tutorial Step-by-Step</strong></div>
+        <div class="toc-item level2">- Mengisi Profil Anak</div>
+        <div class="toc-item level2">- Mengerjakan Tes</div>
+        <div class="toc-item level2">- Melihat Hasil & Laporan</div>
+
+        <div class="toc-item" style="margin-top: 15px;"><strong>6. Tips & Troubleshooting</strong></div>
+        <div class="toc-item level2">- Pertanyaan Umum (FAQ)</div>
+        <div class="toc-item level2">- Solusi Masalah</div>
+    </div>
+</div>
+
+<!-- PAGE 3: PENGENALAN -->
+<div class="page">
+    <h1>1. Pengenalan Aplikasi</h1>
+
+    <h2>Apa itu Si Bakat Hebat?</h2>
+    <div class="content">
+        <p>Si Bakat Hebat adalah aplikasi web untuk mengidentifikasi bakat dan karakter anak melalui metode <strong>TB-40 (40 Sifat Mulia Islami)</strong>. Aplikasi ini membantu guru dan wali murid memahami potensi kekuatan, bakat, dan karakter anak secara komprehensif.</p>
+
+        <div class="highlight">
+            <strong>Metode TB-40:</strong> Tes berbasis 76 pertanyaan dengan 4 section (Aqidah, Ibadah, Karakter Belajar, Karakter Bakat) yang mengukur 40 karakter mulia dalam perspektif Islam.
+        </div>
+    </div>
+
+    <h2>Fitur Utama</h2>
+    <div class="content">
+        <ul>
+            <li><strong>Tes Online:</strong> 76 soal dengan skala 1-10, diselesaikan dalam ±15 menit</li>
+            <li><strong>Hasil Komprehensif:</strong> Laporan detail karakter, potensi, dan gaya belajar</li>
+            <li><strong>Laporan PDF:</strong> Download hasil tes dalam format PDF professional</li>
+            <li><strong>Email Otomatis:</strong> Hasil tes dikirim langsung ke email pengguna</li>
+            <li><strong>Dashboard Admin:</strong> Visualisasi data peserta di 34 provinsi Indonesia</li>
+            <li><strong>Multi-Login:</strong> Login via Email/Password atau Google</li>
+        </ul>
+    </div>
+
+    <h2>Target Pengguna</h2>
+    <div class="content">
+        <table>
+            <tr>
+                <th>Role</th>
+                <th>Deskripsi</th>
+            </tr>
+            <tr>
+                <td><strong>Guru/Pendidik</strong></td>
+                <td>Mengamati dan mengisi tes untuk muridnya, memahami potensi setiap siswa</td>
+            </tr>
+            <tr>
+                <td><strong>Wali Murid</strong></td>
+                <td>Mengamati dan mengisi tes untuk anak kandung, mendapat insight karakter anak</td>
+            </tr>
+            <tr>
+                <td><strong>Admin</strong></td>
+                <td>Mengelola data, melihat dashboard statistik, memonitor aplikasi</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- PAGE 4: PERSIAPAN -->
+<div class="page">
+    <h1>2. Persiapan Awal</h1>
+
+    <h2>Persyaratan Sistem</h2>
+    <div class="content">
+        <div class="feature-box">
+            <h4>✓ Browser Web</h4>
+            <p>Chrome, Firefox, Safari, Edge (versi terbaru)</p>
+        </div>
+
+        <div class="feature-box">
+            <h4>✓ Koneksi Internet</h4>
+            <p>Minimal 2 Mbps untuk akses lancar</p>
+        </div>
+
+        <div class="feature-box">
+            <h4>✓ Perangkat</h4>
+            <p>Desktop, Laptop, atau Tablet (minimal 7 inci)</p>
+        </div>
+
+        <div class="feature-box">
+            <h4>✓ Akun Email</h4>
+            <p>Email aktif untuk registrasi dan menerima laporan</p>
+        </div>
+    </div>
+
+    <h2>Cara Akses Aplikasi</h2>
+    <div class="content">
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Buka Browser</strong>
+            <p>Gunakan Chrome, Firefox, Safari, atau Edge</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Kunjungi Situs</strong>
+            <p>Masukkan URL aplikasi di address bar (minta link dari admin)</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Siap Menggunakan</strong>
+            <p>Pilih "Masuk" jika sudah punya akun atau "Daftar" untuk akun baru</p>
+        </div>
+    </div>
+
+    <div class="tip">
+        Jika mengalami loading lambat, coba refresh halaman (F5) atau hapus cache browser.
+    </div>
+</div>
+
+<!-- PAGE 5: REGISTRASI & LOGIN -->
+<div class="page">
+    <h1>3. Registrasi & Login</h1>
+
+    <h2>Membuat Akun Baru (Registrasi)</h2>
+    <div class="content">
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Klik "Daftar Akun Baru"</strong>
+            <p>Di halaman login, pilih tombol "Daftar di sini" atau "Daftar Akun Baru"</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Isi Data Pribadi</strong>
+            <p>Lengkapi form dengan:<br>
+            • Nama Lengkap<br>
+            • Email Aktif<br>
+            • Password (minimal 8 karakter)<br>
+            • Pilih role (Guru atau Wali Murid)</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Klik "Daftar"</strong>
+            <p>Verifikasi email akan dikirim (jika diperlukan)</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">4</span>
+            <strong>Selesai!</strong>
+            <p>Akun Anda sudah siap digunakan. Login dengan email & password</p>
+        </div>
+    </div>
+
+    <div class="warning">
+        Jangan bagikan password ke siapapun. Gunakan password yang kuat dan mudah diingat oleh Anda saja.
+    </div>
+</div>
+
+<!-- PAGE 6: LOGIN METHODS -->
+<div class="page">
+    <h1>Login & Akses Akun</h1>
+
+    <h2>Login Email/Password</h2>
+    <div class="content">
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Masuk ke Halaman Login</strong>
+            <p>Buka aplikasi dan tunggu halaman login muncul</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Isi Nama Pengguna/Email</strong>
+            <p>Masukkan email atau username yang Anda daftarkan</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Isi Password</strong>
+            <p>Masukkan password (karakter akan tersembunyi dengan •••)</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">4</span>
+            <strong>Centang "Ingat Saya" (Opsional)</strong>
+            <p>Jika ingin otomatis login di browser yang sama</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">5</span>
+            <strong>Klik "Masuk"</strong>
+            <p>Tunggu beberapa detik hingga dashboard terbuka</p>
+        </div>
+    </div>
+
+    <h2>Login dengan Google</h2>
+    <div class="content">
+        <p>Cara tercepat jika Anda punya akun Google:</p>
+        <ol>
+            <li>Klik tombol "Masuk dengan Google" di halaman login</li>
+            <li>Pilih akun Google Anda</li>
+            <li>Berikan izin akses aplikasi</li>
+            <li>Otomatis login & akun Anda terbuat</li>
+        </ol>
+
+        <div class="tip">
+            Login Google tidak perlu ingat password, lebih cepat dan aman.
+        </div>
+    </div>
+
+    <h2>Lupa Password</h2>
+    <div class="content">
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Klik "Lupa password?"</strong>
+            <p>Di halaman login, klik link "Lupa password?" di bawah form</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Masukkan Email</strong>
+            <p>Isi email yang terdaftar di aplikasi</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Cek Email</strong>
+            <p>Buka email Anda, cari pesan dari Si Bakat Hebat dengan link reset password</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">4</span>
+            <strong>Buat Password Baru</strong>
+            <p>Klik link di email, buat password baru, dan konfirmasi</p>
+        </div>
+    </div>
+</div>
+
+<!-- PAGE 7: PANDUAN GURU -->
+<div class="page">
+    <h1>4. Panduan Penggunaan per Role</h1>
+
+    <h2>Untuk Guru / Wali Murid</h2>
+    <div class="content">
+        <div class="role-box">
+            <h3>Alur Umum</h3>
+            <p><strong>Login → Kelola Anak Didik → Baca Riwayat → Unduh Laporan</strong></p>
+        </div>
+
+        <h3>Menu Utama</h3>
+        <table>
+            <tr>
+                <th>Menu</th>
+                <th>Fungsi</th>
+            </tr>
+            <tr>
+                <td><strong>Anak Didik</strong></td>
+                <td>Tambah, edit, lihat data anak yang akan diuji</td>
+            </tr>
+            <tr>
+                <td><strong>Riwayat</strong></td>
+                <td>Lihat semua hasil tes yang sudah selesai</td>
+            </tr>
+            <tr>
+                <td><strong>Profil</strong></td>
+                <td>Edit data pribadi, ganti password</td>
+            </tr>
+            <tr>
+                <td><strong>Keluar</strong></td>
+                <td>Logout dari aplikasi</td>
+            </tr>
+        </table>
+    </div>
+
+    <h2>Untuk Admin</h2>
+    <div class="content">
+        <div class="role-box">
+            <h3>Akses Admin</h3>
+            <p>Admin memiliki akses dashboard khusus untuk melihat statistik dan data di seluruh provinsi.</p>
+        </div>
+
+        <table>
+            <tr>
+                <th>Fitur Admin</th>
+                <th>Keterangan</th>
+            </tr>
+            <tr>
+                <td><strong>Dashboard</strong></td>
+                <td>Visualisasi data peserta tes di 34 provinsi</td>
+            </tr>
+            <tr>
+                <td><strong>Statistik</strong></td>
+                <td>Grafik hasil tes, distribusi karakter, gaya belajar</td>
+            </tr>
+            <tr>
+                <td><strong>Export Data</strong></td>
+                <td>Unduh data dalam format Excel/CSV untuk analisis lanjutan</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- PAGE 8: TAMBAH ANAK -->
+<div class="page">
+    <h1>5. Tutorial Step-by-Step</h1>
+
+    <h2>A. Mengisi Profil Anak</h2>
+    <div class="content">
+        <p>Sebelum melakukan tes, Anda perlu mendaftarkan anak terlebih dahulu.</p>
+
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Buka Menu "Anak Didik"</strong>
+            <p>Dari dashboard, klik "Anak Didik & Mulai Tes"</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Klik Tombol "Tambah Anak"</strong>
+            <p>Di halaman Anak Didik, cari tombol "+ Tambah Anak Baru"</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Isi Identitas Anak</strong>
+            <p>Lengkapi form dengan data:<br>
+            • Nama Lengkap Anak<br>
+            • Tempat Lahir<br>
+            • Tanggal Lahir (Format: DD-MM-YYYY)<br>
+            • Jenis Kelamin<br>
+            • Asal Sekolah/PKBM</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">4</span>
+            <strong>Klik "Simpan"</strong>
+            <p>Data anak tersimpan dan siap untuk tes</p>
+        </div>
+
+        <div class="tip">
+            Data anak bisa diedit kapan saja. Klik "Edit" di samping nama anak untuk mengubah informasi.
+        </div>
+    </div>
+</div>
+
+<!-- PAGE 9: MULAI TES -->
+<div class="page">
+    <h1>Memulai Tes Karakter</h1>
+
+    <h2>B. Mengerjakan Tes (76 Soal)</h2>
+    <div class="content">
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Pilih Anak di Daftar</strong>
+            <p>Dari menu "Anak Didik", lihat daftar anak yang sudah terdaftar</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Klik "Mulai Tes"</strong>
+            <p>Temukan tombol "Mulai Tes" atau "Start Test" di samping nama anak</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Baca Instruksi</strong>
+            <p>Halaman instruksi akan muncul. Baca dengan seksama sebelum melanjutkan</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">4</span>
+            <strong>Jawab 76 Soal</strong>
+            <p>Tes terdiri dari 4 section:<br>
+            • Section 1: 9 soal Aqidah (Kepercayaan)<br>
+            • Section 2: 9 soal Ibadah (Praktik Ibadah)<br>
+            • Section 3: 9 soal Karakter Belajar<br>
+            • Section 4: 49 soal Karakter TB-40</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">5</span>
+            <strong>Pilih Jawaban Skala 1-10</strong>
+            <p>Setiap soal mempunyai skala 1-10. Pilih angka yang paling sesuai dengan observasi Anda.</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">6</span>
+            <strong>Klik "Selesai" atau "Submit"</strong>
+            <p>Setelah semua 76 soal dijawab, klik tombol untuk menyelesaikan tes</p>
+        </div>
+
+        <div class="warning">
+            Jangan refresh atau tutup halaman saat mengerjakan tes, semua jawaban akan hilang!
+        </div>
+
+        <div class="tip">
+            Tes biasanya membutuhkan waktu ±15 menit. Anda bisa pause dan lanjutkan kemudian jika tersedia fitur tersebut.
+        </div>
+    </div>
+</div>
+
+<!-- PAGE 10: HASIL & LAPORAN -->
+<div class="page">
+    <h1>Melihat Hasil & Laporan</h1>
+
+    <h2>C. Melihat Hasil Tes</h2>
+    <div class="content">
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Akses Menu "Riwayat"</strong>
+            <p>Dari dashboard, klik "Riwayat Hasil" untuk melihat semua tes yang selesai</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Pilih Anak & Tes</strong>
+            <p>Cari dan klik nama anak untuk melihat hasil tesnya</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Baca Laporan Hasil</strong>
+            <p>Halaman hasil akan menampilkan:<br>
+            • Skor per section (Aqidah, Ibadah, Karakter Belajar, TB-40)<br>
+            • Grafik visualisasi karakter<br>
+            • Interpretasi hasil & rekomendasi</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">4</span>
+            <strong>Download PDF</strong>
+            <p>Klik tombol "Download Laporan PDF" untuk menyimpan laporan dalam format PDF</p>
+        </div>
+    </div>
+
+    <h2>Konten Laporan PDF</h2>
+    <div class="content">
+        <table>
+            <tr>
+                <th>Bagian Laporan</th>
+                <th>Isi</th>
+            </tr>
+            <tr>
+                <td><strong>Identitas</strong></td>
+                <td>Nama, usia, tanggal tes</td>
+            </tr>
+            <tr>
+                <td><strong>Skor</strong></td>
+                <td>Skor mentah dan rata-rata per section</td>
+            </tr>
+            <tr>
+                <td><strong>Grafik</strong></td>
+                <td>Visualisasi 40 karakter TB-40 dalam radar chart</td>
+            </tr>
+            <tr>
+                <td><strong>Interpretasi</strong></td>
+                <td>Analisis mendalam, kekuatan, dan rekomendasi</td>
+            </tr>
+            <tr>
+                <td><strong>Gaya Belajar</strong></td>
+                <td>Tipe learner (visual, auditori, kinestetik)</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="highlight">
+        <strong>Email Otomatis:</strong> Laporan hasil juga dikirim secara otomatis ke email Anda saat tes selesai.
+    </div>
+</div>
+
+<!-- PAGE 11: TIPS & FAQ -->
+<div class="page">
+    <h1>6. Tips & Troubleshooting</h1>
+
+    <h2>Tips Mengerjakan Tes</h2>
+    <div class="content">
+        <div class="tip">
+            <strong>Observasi Matang:</strong> Jangan terburu-buru dalam menjawab. Pilih skala yang benar-benar mencerminkan observasi Anda terhadap anak.
+        </div>
+
+        <div class="tip">
+            <strong>Konsistensi:</strong> Usahakan satu anak diobservasi oleh satu orang saja untuk hasil yang konsisten.
+        </div>
+
+        <div class="tip">
+            <strong>Waktu Terbaik:</strong> Lakukan tes saat anak dalam kondisi normal, bukan saat sedang emosi atau tidak sehat.
+        </div>
+
+        <div class="tip">
+            <strong>Koneksi Stabil:</strong> Gunakan koneksi internet yang stabil selama mengerjakan tes.
+        </div>
+
+        <div class="tip">
+            <strong>Simpan Laporan:</strong> Download dan simpan laporan PDF untuk referensi di masa depan.
+        </div>
+    </div>
+
+    <h2>Pertanyaan Umum (FAQ)</h2>
+    <div class="content">
+        <h3>T: Berapa lama waktu mengerjakan tes?</h3>
+        <p>J: Sekitar 15 menit untuk 76 soal (±10-12 detik per soal).</p>
+
+        <h3>T: Berapa usia minimal untuk ditest?</h3>
+        <p>J: Disarankan usia 5 tahun ke atas (TK-SMA) untuk hasil yang lebih akurat.</p>
+
+        <h3>T: Boleh mengerjakan tes berkali-kali untuk anak yang sama?</h3>
+        <p>J: Boleh, untuk melihat perkembangan anak dari waktu ke waktu. Disarankan interval 6 bulan.</p>
+
+        <h3>T: Bagaimana jika lupa password?</h3>
+        <p>J: Klik "Lupa password?" di halaman login, ikuti instruksi via email, dan buat password baru.</p>
+
+        <h3>T: Data saya aman?</h3>
+        <p>J: Ya, aplikasi menggunakan enkripsi dan hanya Anda & admin yang bisa akses data pribadi.</p>
+    </div>
+</div>
+
+<!-- PAGE 12: TROUBLESHOOTING -->
+<div class="page">
+    <h1>Solusi Masalah Umum</h1>
+
+    <h2>Aplikasi Tidak Bisa Diakses</h2>
+    <div class="content">
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Cek Koneksi Internet</strong>
+            <p>Pastikan perangkat terhubung dengan internet (WiFi atau data mobile)</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Refresh Halaman</strong>
+            <p>Tekan F5 atau Ctrl+R untuk refresh halaman</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Bersihkan Cache Browser</strong>
+            <p>Buka menu browser → Settings → Clear Cache/History → Refresh</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">4</span>
+            <strong>Ganti Browser</strong>
+            <p>Coba gunakan browser lain (Chrome, Firefox, Safari)</p>
+        </div>
+    </div>
+
+    <h2>Tidak Bisa Login</h2>
+    <div class="content">
+        <ul>
+            <li>Pastikan email/username dan password benar (perhatikan huruf besar-kecil)</li>
+            <li>Periksa caps lock, jangan sampai aktif</li>
+            <li>Gunakan "Lupa password?" untuk reset password</li>
+            <li>Tunggu 5 menit sebelum mencoba login lagi (jika terlalu banyak percobaan gagal)</li>
+        </ul>
+    </div>
+
+    <h2>Halaman Loading Lambat</h2>
+    <div class="content">
+        <ul>
+            <li>Periksa kecepatan koneksi internet Anda</li>
+            <li>Tutup tab browser yang tidak perlu</li>
+            <li>Restart browser dan coba lagi</li>
+            <li>Coba di waktu yang berbeda (mungkin server lagi sibuk)</li>
+        </ul>
+    </div>
+
+    <h2>Tes Tidak Tersimpan</h2>
+    <div class="content">
+        <ul>
+            <li>Jangan refresh atau tutup halaman saat mengerjakan tes</li>
+            <li>Pastikan koneksi internet tetap stabil</li>
+            <li>Jika terputus, login kembali dan coba lagi dari awal</li>
+            <li>Hubungi admin jika perlu bantuan menyelamatkan data</li>
+        </ul>
+    </div>
+
+    <h2>Kontact Support</h2>
+    <div class="highlight">
+        <p><strong>Jika masalah belum teratasi:</strong></p>
+        <p>Hubungi admin atau support melalui WhatsApp untuk bantuan lebih lanjut.</p>
+        <p>Siapkan screenshot error dan deskripsi masalah untuk memudahkan penyelesaian.</p>
+    </div>
+</div>
+
+<!-- PAGE 13: PENUTUP -->
+<div class="page">
+    <h1>Kesimpulan</h1>
+
+    <div class="content" style="font-size: 16px; line-height: 2;">
+        <p style="margin-bottom: 30px;">
+            <strong>Si Bakat Hebat</strong> adalah alat yang powerful untuk memahami bakat dan karakter anak melalui metode TB-40 yang terbukti secara ilmiah.
+        </p>
+
+        <h2 style="font-size: 24px;">Ringkasan Alur Penggunaan:</h2>
+        <div style="background: #E8F4F8; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <p><strong>1. Login</strong> dengan email/password atau Google</p>
+            <p><strong>2. Daftarkan</strong> anak yang akan ditest</p>
+            <p><strong>3. Isi Tes</strong> dengan cermat (76 soal, ±15 menit)</p>
+            <p><strong>4. Lihat Hasil</strong> dan unduh laporan PDF</p>
+            <p><strong>5. Analisis</strong> hasil untuk pengembangan anak</p>
+        </div>
+
+        <h2 style="font-size: 24px;">Keuntungan Penggunaan:</h2>
+        <ul style="margin-top: 15px;">
+            <li>✓ Identifikasi potensi anak secara menyeluruh</li>
+            <li>✓ Laporan detail dalam bahasa yang mudah dipahami</li>
+            <li>✓ Grafik visualisasi yang informatif</li>
+            <li>✓ Panduan pengembangan berdasarkan hasil tes</li>
+            <li>✓ Dapat diakses kapan saja, dari mana saja</li>
+        </ul>
+
+        <div style="margin-top: 40px; text-align: center; padding: 20px; background: linear-gradient(135deg, #E8F4F8 0%, #F0F8FF 100%); border-radius: 8px;">
+            <p style="font-size: 18px; color: #2E5C8A;"><strong>Temukan Bakat Terbaik Anak Bersama Si Bakat Hebat! 💡🌸</strong></p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
