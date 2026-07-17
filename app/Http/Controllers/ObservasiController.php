@@ -3,15 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\JawabanRequest;
-use App\Mail\HasilTesMail;
 use App\Models\Observasi;
 use App\Models\Soal;
 use App\Services\KalkulasiTB40Service;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class ObservasiController extends Controller
@@ -53,7 +50,12 @@ class ObservasiController extends Controller
     }
 
     /**
-     * POST /soal — Simpan 76 jawaban, proses hasil, kirim email, redirect ke hasil.
+     * POST /soal — Simpan 76 jawaban, proses hasil, redirect ke hasil.
+     *
+     * Hasil tidak lagi dikirim otomatis lewat email di sini: merakit PDF dan
+     * menunggu SMTP membuat pengguna menatap layar kosong beberapa detik setelah
+     * menekan "Selesai". Pengiriman kini atas permintaan, lewat tombol pada
+     * halaman hasil (HasilController::kirimEmail).
      */
     public function storeSoal(JawabanRequest $request): RedirectResponse
     {
@@ -89,33 +91,8 @@ class ObservasiController extends Controller
             $this->kalkulasi->prosesHasil($observasi);
         });
 
-        // Kirim hasil ke email user yang login.
-        $this->kirimHasilKeEmail($request, $observasi);
-
         $request->session()->forget('observasi_id');
 
         return redirect()->route('hasil.show', $observasi);
-    }
-
-    /**
-     * Kirim hasil ke email guru/wali. Di hosting tanpa queue worker, gunakan send() langsung.
-     */
-    private function kirimHasilKeEmail(Request $request, Observasi $observasi): void
-    {
-        $email = $request->user()?->email;
-        if (! $email) {
-            return;
-        }
-
-        try {
-            Mail::to($email)->send(new HasilTesMail($observasi));
-        } catch (\Throwable $e) {
-            Log::error('Gagal mengirim email hasil tes.', [
-                'observasi_id' => $observasi->id,
-                'email' => $email,
-                'error' => $e->getMessage(),
-            ]);
-            report($e);
-        }
     }
 }

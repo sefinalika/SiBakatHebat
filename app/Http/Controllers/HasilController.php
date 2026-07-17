@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\HasilTesMail;
 use App\Models\Observasi;
 use App\Services\KalkulasiTB40Service;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class HasilController extends Controller
@@ -75,6 +79,45 @@ class HasilController extends Controller
         $pdf = Pdf::loadView('hasil.pdf', $this->rakitHasil($observasi));
 
         return $pdf->download("hasil-sibakathebat-{$observasi->id}.pdf");
+    }
+
+    /**
+     * POST /hasil/{observasi}/kirim-email — Kirim laporan PDF ke alamat email.
+     *
+     * Email dikirim langsung (bukan queue) karena hosting tidak menjalankan
+     * queue worker. Merakit PDF butuh beberapa detik, jadi request ikut menunggu.
+     */
+    public function kirimEmail(Request $request, Observasi $observasi): RedirectResponse
+    {
+        $this->pastikanBolehAkses($request, $observasi);
+
+        $data = $request->validate([
+            'email' => ['required', 'email:rfc', 'max:255'],
+        ], [
+            'email.required' => 'Alamat email tujuan wajib diisi.',
+            'email.email' => 'Format alamat email tidak valid.',
+            'email.max' => 'Alamat email terlalu panjang.',
+        ]);
+
+        // Merakit PDF lalu menunggu SMTP bisa memakan belasan detik. Shared
+        // hosting sering memutus di 30 detik; longgarkan bila diizinkan.
+        @set_time_limit(120);
+
+        try {
+            Mail::to($data['email'])->send(new HasilTesMail($observasi));
+        } catch (\Throwable $e) {
+            Log::error('Gagal mengirim laporan hasil ke email.', [
+                'observasi_id' => $observasi->id,
+                'email' => $data['email'],
+                'error' => $e->getMessage(),
+            ]);
+
+            return back()
+                ->withInput()
+                ->withErrors(['email' => 'Laporan gagal dikirim. Silakan coba lagi beberapa saat lagi.']);
+        }
+
+        return back()->with('kirim_sukses', 'Laporan PDF sudah dikirim ke '.$data['email'].'.');
     }
 
     /**

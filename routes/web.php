@@ -85,6 +85,9 @@ Route::middleware(['auth', 'profil.lengkap'])->group(function () {
 
     Route::get('/hasil/{observasi}', [HasilController::class, 'tampil'])->name('hasil.show');
     Route::get('/hasil/{observasi}/pdf', [HasilController::class, 'exportPdf'])->name('hasil.pdf');
+    // Dibatasi agar tidak dipakai mengirim email beruntun ke alamat orang lain.
+    Route::post('/hasil/{observasi}/kirim-email', [HasilController::class, 'kirimEmail'])
+        ->middleware('throttle:5,10')->name('hasil.kirim-email');
     Route::get('/api/hasil/{observasi}', [HasilController::class, 'apiHasil'])->name('api.hasil.show');
 });
 

@@ -79,7 +79,7 @@
             <button type="button" @click="advance()"
                     class="group flex-1 rounded-full px-6 py-3.5 font-semibold text-white transition"
                     :class="isLast ? 'bg-accent text-ink hover:brightness-95' : 'bg-brand hover:bg-brand-dark'">
-                <span x-text="isLast ? 'Lihat Hasil & Kirim ke Email' : 'Selanjutnya'"></span>
+                <span x-text="isLast ? 'Lihat Hasil' : 'Selanjutnya'"></span>
                 <span class="inline-block transition-transform group-hover:translate-x-1" x-show="!isLast">&rarr;</span>
             </button>
         </div>
