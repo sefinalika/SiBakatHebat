@@ -55,11 +55,11 @@
                 <div class="grid sm:grid-cols-2 gap-4">
                     <div>
                         <label class="{{ $labelClass }}">Password <span class="text-red-500">*</span></label>
-                        <input type="password" name="password" placeholder="Minimal 8 karakter" class="{{ $inputClass }}">
+                        <x-password-input name="password" :input-class="$inputClass" placeholder="Minimal 8 karakter" />
                     </div>
                     <div>
                         <label class="{{ $labelClass }}">Ulangi Password <span class="text-red-500">*</span></label>
-                        <input type="password" name="password_confirmation" placeholder="Ulangi password" class="{{ $inputClass }}">
+                        <x-password-input name="password_confirmation" :input-class="$inputClass" placeholder="Ulangi password" />
                     </div>
                 </div>
 

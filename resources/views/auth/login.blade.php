@@ -52,7 +52,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-ink mb-1">Password</label>
-                    <input type="password" name="password" value="" autocomplete="new-password" class="{{ $inputClass }}" placeholder="••••••••">
+                    <x-password-input name="password" :input-class="$inputClass" placeholder="••••••••" autocomplete="new-password" />
                 </div>
                 <div class="flex items-center justify-between">
                     <label class="flex items-center gap-2 text-sm text-ink-soft">

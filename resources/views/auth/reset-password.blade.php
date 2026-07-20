@@ -35,11 +35,11 @@
             </div>
             <div>
                 <label class="mb-1 block text-sm font-medium text-ink">Password Baru</label>
-                <input type="password" name="password" placeholder="Minimal 8 karakter" class="{{ $inputClass }}">
+                <x-password-input name="password" :input-class="$inputClass" placeholder="Minimal 8 karakter" />
             </div>
             <div>
                 <label class="mb-1 block text-sm font-medium text-ink">Ulangi Password Baru</label>
-                <input type="password" name="password_confirmation" placeholder="Ulangi password" class="{{ $inputClass }}">
+                <x-password-input name="password_confirmation" :input-class="$inputClass" placeholder="Ulangi password" />
             </div>
 
             <button type="submit"
